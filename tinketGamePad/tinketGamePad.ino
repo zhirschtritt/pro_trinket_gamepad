@@ -1,62 +1,24 @@
 #include <ProTrinketKeyboard.h>
-
-#define spacebarPin 5 //labeled RX on Trinket
-#define upArrowPin 6 //labeled TX on Trinket
-#define downArrowPin 8
-#define rightArrowPin 3
-#define leftArrowPin 4
-#define wPin 1
+int pins[] = {0, 1, 3, 4, 5, 6};
+bool pinStates[] = {false, false, false, false , false, false};
+int keycodes[] = {KEYCODE_SPACE, KEYCODE_ARROW_UP, KEYCODE_ARROW_DOWN, KEYCODE_ARROW_RIGHT, KEYCODE_ARROW_LEFT};
 
 long nextPress;
 
 void setup() {
-  pinMode(spacebarPin, INPUT_PULLUP);
-  pinMode(upArrowPin, INPUT_PULLUP);
-  pinMode(downArrowPin, INPUT_PULLUP);
-  pinMode(rightArrowPin, INPUT_PULLUP);
-  pinMode(leftArrowPin, INPUT_PULLUP);
-  pinMode(wPin, INPUT_PULLUP);                 
-
+  for (byte i = 0; i < sizeof(pins); i++) {
+    pinMode(i, INPUT_PULLUP);
+  }
   nextPress = millis();
-
   TrinketKeyboard.begin();
 }
 
 void loop() {
   TrinketKeyboard.poll();
-
-  if (digitalRead(spacebarPin) == LOW) {
-
-    TrinketKeyboard.pressKey(0, KEYCODE_SPACE);
-    TrinketKeyboard.pressKey(0, 0);
+  for (byte i = 0; i < sizeof(pins); i++) {
+    if (digitalRead(pins[i]) == LOW) {
+      TrinketKeyboard.pressKey(0, keycodes[i]);
+      TrinketKeyboard.pressKey(0, 0);
+    }
   }
-  if (digitalRead(upArrowPin) == LOW) {
-
-    TrinketKeyboard.pressKey(0, KEYCODE_ARROW_UP);
-    TrinketKeyboard.pressKey(0, 0);
-  }
-  if (digitalRead(downArrowPin) == LOW) {
-
-    TrinketKeyboard.pressKey(0, KEYCODE_ARROW_DOWN);
-    TrinketKeyboard.pressKey(0, 0);
-  }
-  //  if (millis() > nextPress) {
-  if (digitalRead(rightArrowPin) == LOW) {
-
-    TrinketKeyboard.pressKey(0, KEYCODE_ARROW_RIGHT);
-    TrinketKeyboard.pressKey(0, 0);
-  }
-  //    nextPress = millis() + 13;
-  //  }
-  if (digitalRead(leftArrowPin) == LOW) {
-
-    TrinketKeyboard.pressKey(0, KEYCODE_ARROW_LEFT);
-    TrinketKeyboard.pressKey(0, 0);
-  }
-  if (digitalRead(wPin) == LOW) {
-
-    TrinketKeyboard.pressKey(0, KEYCODE_W);
-    TrinketKeyboard.pressKey(0, 0);
-  }
-
 }
