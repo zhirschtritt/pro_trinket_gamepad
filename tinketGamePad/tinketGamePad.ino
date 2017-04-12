@@ -13,7 +13,7 @@ void setup() {
 void loop() {
   TrinketKeyboard.poll();
   for (byte i = 0; i < sizeof(pins); i++) {
-    if (prevSates[i] != digitalRead(pins[i])) {
+    if (prevStates[i] != digitalRead(pins[i])) {
       if (digitalRead(pins[i]) == LOW) {
         TrinketKeyboard.pressKey(0, keycodes[i]);
       }
