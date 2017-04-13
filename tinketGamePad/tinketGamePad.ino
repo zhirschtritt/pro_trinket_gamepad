@@ -1,25 +1,35 @@
 #include <ProTrinketKeyboard.h>
-int pins[] = {0, 1, 3, 4, 5, 6};
-char prevStates[] = {HIGH, HIGH, HIGH, HIGH , HIGH, HIGH};
-int keycodes[] = {KEYCODE_SPACE, KEYCODE_ARROW_UP, KEYCODE_ARROW_DOWN, KEYCODE_ARROW_RIGHT, KEYCODE_ARROW_LEFT};
+byte pins[] = {1, 3, 4};
+byte keycodes[] = {KEYCODE_ARROW_LEFT, KEYCODE_ARROW_UP, KEYCODE_ARROW_RIGHT};
+bool stateChange;
+byte currentStates[] = {HIGH, HIGH, HIGH};
+byte prevStates[] = {HIGH, HIGH, HIGH};
+
 
 void setup() {
   for (byte i = 0; i < sizeof(pins); i++) {
-    pinMode(i, INPUT_PULLUP);
+    pinMode(pins[i], INPUT_PULLUP);
   }
   TrinketKeyboard.begin();
 }
 
 void loop() {
   TrinketKeyboard.poll();
+  stateChange = false;
   for (byte i = 0; i < sizeof(pins); i++) {
-    if (prevStates[i] != digitalRead(pins[i])) {
-      if (digitalRead(pins[i]) == LOW) {
+    currentStates[i] = digitalRead(pins[i]);
+    if (currentStates[i] != prevStates[i]) {
+      stateChange = true;
+    }
+    prevStates[i] = currentStates[i];
+  }
+  
+  if (stateChange){
+    TrinketKeyboard.pressKey(0, 0);
+    for (byte i = 0; i < sizeof(pins); i++) {
+      if (currentStates[i] == LOW) {
         TrinketKeyboard.pressKey(0, keycodes[i]);
       }
-      else {
-        TrinketKeyboard.pressKey(0, 0);
-      }
     }
-  }
+ }
 }
