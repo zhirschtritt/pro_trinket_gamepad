@@ -1,14 +1,16 @@
 #include <ProTrinketKeyboard.h>
-byte pins[] = {1, 3, 4};
-byte keycodes[] = {KEYCODE_ARROW_LEFT, KEYCODE_ARROW_UP, KEYCODE_ARROW_RIGHT};
-bool stateChange;
-byte currentStates[] = {HIGH, HIGH, HIGH};
-byte prevStates[] = {HIGH, HIGH, HIGH};
+byte pins[] = {0,1,3,4,5,6};
+byte keycodes[] = {KEYCODE_SPACE, KEYCODE_ARROW_UP, KEYCODE_ARROW_DOWN, KEYCODE_ARROW_RIGHT, KEYCODE_ARROW_LEFT, KEYCODE_W};
+bool stateChange;   
+byte currentStates[sizeof(pins)];
+byte prevStates[sizeof(pins)];
 
 
 void setup() {
   for (byte i = 0; i < sizeof(pins); i++) {
     pinMode(pins[i], INPUT_PULLUP);
+    currentStates[i] = HIGH;
+    prevStates[i] = HIGH;
   }
   TrinketKeyboard.begin();
 }
